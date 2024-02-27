@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Quiz App</title>
+  <link rel="icon" href="images/R.jpg">
+  <style>
+    .container {
+      max-width: 340px;
+      margin: 350px auto;
+      margin-top: 25px;
+      margin-bottom: 75px;
+      padding: 20px;
+      border: 2px solid #333;
+      border-radius: 10px;
+    }
+   .hidden {
+      display: none;
+    }
+
+    h2 {
+      font-size: 24px;
+    }    label {
+      font-size: 18px;
+    }
+    .des{max-width: 360px;
+      margin: 10px auto;
+      margin-top: 15px;
+      padding: 20px; 
+      border: 2px solid #333;
+      border-radius: 35px;
+    
+      
+    }
+    .img{padding: 50px;
+      font-style: italic;
+      font-size:x-large;
+      
+    }
+    input[type="text"],
+    input[type="email"] {
+      font-size: 16px;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      font-size: 18px;
+      margin-top: 5px;
+      padding: 5px 16px;
+    }
+
+    #choices label {
+      font-size: 18px;
+    }
+  
+  </style>
+</head>
+<body>
+  <div class="des">
+    <center><div class="img"><img src="images/R.jpg" width="100" height="100"><br>
+     QUIZ!</div></center>
+     <div class="bod1"><br></div>
+    
+  <div class="container">
+    <div id="start-quiz">
+      <h2>Welcome to the Quiz!</h2>
+      <label for="name">Name:</label>
+      <input type="text" id="name" required><br>
+      <label for="email">Email:</label>
+      <input type="email" id="email" required><center>
+      <button onclick="startQuiz()">Start Quiz</button></center>
+    </div>
+    <div id="question-container" class="hidden">
+      <h2 id="question">Question</h2>
+      <div id="choices"></div>
+      <button onclick="submitAnswer()">Submit Answer</button>
+    </div>
+    <div id="result-container" class="hidden">
+      <h2>Quiz Completed!</h2>
+      <p id="score">Your score is: </p>
+    </div>
+  </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "What is the capital of France?",
+        choices: ["Paris", "Berlin", "London", "Rome"],
+        answer: "Paris"
+      },
+      {
+        question: "What is 2 + 2?",
+        choices: ["3", "4", "5", "6"],
+        answer: "4"
+      },
+      {
+        question: "Which planet is known as the Red Planet?",
+        choices: ["Mars", "Venus", "Jupiter", "Mercury"],
+        answer: "Mars"
+      },
+      {
+        question: "Who wrote 'Romeo and Juliet'?",
+        choices: ["Shakespeare", "Dickens", "Hemingway", "Twain"],
+        answer: "Shakespeare"
+      },
+      {
+        question: "What is the chemical symbol for water?",
+        choices: ["H2O", "CO2", "O2", "CH4"],
+        answer: "H2O"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const startQuizBtn = document.getElementById("start-quiz");
+    const questionContainer = document.getElementById("question-container");
+    const resultContainer = document.getElementById("result-container");
+    const questionText = document.getElementById("question");
+    const choicesContainer = document.getElementById("choices");
+    const scoreText = document.getElementById("score");
+
+    function startQuiz() {
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      if (name === "" || email === "") {
+        alert("Please provide your name and email.");
+        return;
+      }
+
+      startQuizBtn.classList.add("hidden");
+      questionContainer.classList.remove("hidden");
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const question = questions[currentQuestion];
+      questionText.textContent = question.question;
+      choicesContainer.innerHTML = "";
+      question.choices.forEach(choice => {
+        const radioBtn = document.createElement("input");
+        radioBtn.type = "radio";
+        radioBtn.name = "choice";
+        radioBtn.value = choice;
+        radioBtn.required = true;
+        choicesContainer.appendChild(radioBtn);
+
+        const choiceLabel = document.createElement("label");
+        choiceLabel.textContent = choice;
+        choicesContainer.appendChild(choiceLabel);
+        choicesContainer.appendChild(document.createElement("br"));
+      });
+    }
+
+    function submitAnswer() {
+      const userAnswer = document.querySelector('input[name="choice"]:checked');
+      if (!userAnswer) {
+        alert("Please select an answer.");
+        return;
+      }
+
+      const selectedAnswer = userAnswer.value;
+      const correctAnswer = questions[currentQuestion].answer;
+      if (selectedAnswer === correctAnswer) {
+        score++;
+      }
+
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      questionContainer.classList.add("hidden");
+      resultContainer.classList.remove("hidden");
+      scoreText.textContent = "Your score is: " + score + "/5";
+    }
+  </script>
+</body>
+</html>
